@@ -516,7 +516,7 @@ async function run() {
 
     const status = {
       ...github.context.repo,
-      sha: github.context.sha,
+      sha: github.context.ref,
       state
     };
 
@@ -533,11 +533,7 @@ async function run() {
     });
 
     const octokit = new github.GitHub(token);
-    const result = await octokit.request(
-      "POST /repos/:owner/:repo/statuses/:sha",
-      status
-    );
-    console.log(JSON.stringify(result));
+    octokit.repos.createStatus(status);
   } catch (error) {
     core.setFailed(error.message);
   }
