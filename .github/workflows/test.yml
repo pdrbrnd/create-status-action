@@ -1,25 +1,21 @@
-name: "units-test"
+name: "Action test"
 on:
   pull_request:
   push:
     branches:
       - master
-      - 'releases/*'
 
 jobs:
-  # unit tests
-  units:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v1
-    - run: npm ci
-    - run: npm test
-
-  # test action works running from the graph  
   test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - uses: ./
-      with:
-        milliseconds: 1000
+      - uses: actions/checkout@v1
+
+      - name: Set commit status
+        uses: ./
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          state: success
+          description: Status added to commit!
+          url: https://github.com/pbrandone/create-status-action
+          context: action test run
