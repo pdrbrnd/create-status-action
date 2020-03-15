@@ -19,7 +19,7 @@ async function run() {
 
     const status = {
       ...github.context.repo,
-      sha: github.context.ref,
+      sha: github.context.sha,
       state
     };
 
@@ -36,7 +36,8 @@ async function run() {
     });
 
     const octokit = new github.GitHub(token);
-    octokit.repos.createStatus(status);
+    const result = await octokit.repos.createStatus(status);
+    console.log(JSON.stringify(result));
   } catch (error) {
     core.setFailed(error.message);
   }
