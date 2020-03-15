@@ -1,13 +1,25 @@
-name: 'Wait'
-description: 'Wait a designated number of milliseconds'
-inputs:
-  milliseconds:  # id of input
-    description: 'number of milliseconds to wait'
-    required: true
-    default: '1000'
-outputs:
-  time: # output will be available to future steps 
-    description: 'The message to output'
+name: Checks Status
+description: Creates a commit status (https://developer.github.com/v3/repos/statuses/#create-a-status)
+author: pbrandone
 runs:
-  using: 'node12'
-  main: 'dist/index.js'
+  using: node12
+  main: dist/index.js
+branding:
+  icon: check-circle
+  color: green
+inputs:
+  token:
+    description: GitHub Token
+    required: true
+  state:
+    description: The state of the status. Can be one of error, failure, pending, or success.
+    required: true
+  url:
+    description: The target URL to associate with this status.
+    required: false
+  description:
+    description: A short description of the status.
+    required: false
+  context:
+    description: A string label to differentiate this status from the status of other systems.
+    required: false

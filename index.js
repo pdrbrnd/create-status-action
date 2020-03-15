@@ -1,22 +1,45 @@
-const core = require('@actions/core');
-const wait = require('./wait');
+const core = require("@actions/core");
+const github = require("@actions/github");
 
+const acceptedStates = ["error", "failure", "pending", "success"];
 
-// most @actions toolkit packages have async methods
 async function run() {
-  try { 
-    const ms = core.getInput('milliseconds');
-    console.log(`Waiting ${ms} milliseconds ...`)
+  try {
+    const token = core.getInput("token", { required: true });
+    const state = core.getInput("state", { required: true });
+    const url = core.getInput("url");
+    const description = core.getInput("description");
+    const context = core.getInput("context");
 
-    core.debug((new Date()).toTimeString())
-    await wait(parseInt(ms));
-    core.debug((new Date()).toTimeString())
+    if (acceptedStates.indexOf(state) === -1) {
+      throw new Error(
+        `Invalid status provided. Must be one of ${acceptedStates.join(", ")}`
+      );
+    }
 
-    core.setOutput('time', new Date().toTimeString());
-  } 
-  catch (error) {
+    const status = {
+      ...github.context.repo,
+      sha: github.context.sha,
+      state
+    };
+
+    const optional = [
+      { value: url, key: "target_url" },
+      { value: description, key: "description" },
+      { value: context, key: "context" }
+    ];
+
+    optional.forEach(value => {
+      if (value.value) {
+        status[value.key] = value.value;
+      }
+    });
+
+    const octokit = new github.GitHub(token);
+    octokit.repos.createStatus(status);
+  } catch (error) {
     core.setFailed(error.message);
   }
 }
 
-run()
+run();
