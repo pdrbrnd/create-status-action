@@ -36,6 +36,7 @@ async function run() {
     });
 
     const octokit = new github.GitHub(token);
+    console.log("here");
     octokit.repos
       .createStatus(status)
       .then(result => {
