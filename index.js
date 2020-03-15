@@ -35,12 +35,17 @@ async function run() {
       }
     });
 
-    console.log("status:", JSON.stringify(status));
-
     const octokit = new github.GitHub(token);
-    const result = await octokit.repos.createStatus(status);
 
-    console.log("result:", JSON.stringify(result));
+    octokit.checks.create({
+      ...github.context.repo,
+      head_sha: github.context.sha,
+      name: "Test URL",
+      conclusion: "success",
+      status: "completed",
+      details_url: "https://google.com/"
+    });
+    // octokit.repos.createStatus(status);
   } catch (error) {
     core.setFailed(error.message);
   }
