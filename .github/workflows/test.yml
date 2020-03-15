@@ -1,9 +1,5 @@
 name: "Action test"
-on:
-  pull_request:
-  push:
-    branches:
-      - master
+on: pull_request
 
 jobs:
   test:
