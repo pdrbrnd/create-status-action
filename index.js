@@ -36,7 +36,14 @@ async function run() {
     });
 
     const octokit = new github.GitHub(token);
-    octokit.repos.createStatus(status);
+    octokit.repos
+      .createStatus(status)
+      .then(result => {
+        core.setOutput(result.status);
+      })
+      .catch(error => {
+        core.setFailed(error.message);
+      });
   } catch (error) {
     core.setFailed(error.message);
   }
