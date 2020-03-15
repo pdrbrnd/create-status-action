@@ -35,6 +35,9 @@ async function run() {
       }
     });
 
+    console.log("github context sha", github.context.sha);
+    console.log("env sha", process.env.GITHUB_SHA);
+
     const octokit = new github.GitHub(token);
     const result = await octokit.repos.createStatus(status);
     console.log(JSON.stringify(result));
