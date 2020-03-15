@@ -532,16 +532,12 @@ async function run() {
       }
     });
 
+    console.log("status:", JSON.stringify(status));
+
     const octokit = new github.GitHub(token);
-    console.log("here");
-    octokit.repos
-      .createStatus(status)
-      .then(result => {
-        core.setOutput(result.status);
-      })
-      .catch(error => {
-        core.setFailed(error.message);
-      });
+    const result = await octokit.repos.createStatus(status);
+
+    console.log("result:", JSON.stringify(result));
   } catch (error) {
     core.setFailed(error.message);
   }
