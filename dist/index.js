@@ -514,7 +514,13 @@ async function run() {
       );
     }
 
-    const sha = github.context.payload.after || github.context.sha;
+    const {
+      context: { payload }
+    } = github;
+    const sha =
+      payload.pull_request && payload.pull_request.head
+        ? payload.pull_request.head.sha
+        : github.context.sha;
 
     const status = {
       ...github.context.repo,
