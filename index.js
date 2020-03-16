@@ -29,18 +29,16 @@ async function run() {
       { value: context, key: "context" }
     ];
 
+    console.log("github context", JSON.stringify(github.context));
+
     optional.forEach(value => {
       if (value.value) {
         status[value.key] = value.value;
       }
     });
 
-    console.log("github context sha", github.context.sha);
-    console.log("env sha", process.env.GITHUB_SHA);
-
     const octokit = new github.GitHub(token);
-    const result = await octokit.repos.createStatus(status);
-    console.log(JSON.stringify(result));
+    await octokit.repos.createStatus(status);
   } catch (error) {
     core.setFailed(error.message);
   }
