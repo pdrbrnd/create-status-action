@@ -17,9 +17,17 @@ async function run() {
       );
     }
 
+    const {
+      context: { payload }
+    } = github;
+    const sha =
+      payload.pull_request && payload.pull_request.head
+        ? payload.pull_request.head.sha
+        : github.context.sha;
+
     const status = {
       ...github.context.repo,
-      sha: github.context.sha,
+      sha,
       state
     };
 
@@ -36,7 +44,7 @@ async function run() {
     });
 
     const octokit = new github.GitHub(token);
-    octokit.repos.createStatus(status);
+    await octokit.repos.createStatus(status);
   } catch (error) {
     core.setFailed(error.message);
   }
