@@ -514,9 +514,11 @@ async function run() {
       );
     }
 
+    const sha = github.context.payload.after || github.context.sha;
+
     const status = {
       ...github.context.repo,
-      sha: github.context.sha,
+      sha,
       state
     };
 
@@ -525,8 +527,6 @@ async function run() {
       { value: description, key: "description" },
       { value: context, key: "context" }
     ];
-
-    console.log("github context", JSON.stringify(github.context));
 
     optional.forEach(value => {
       if (value.value) {
